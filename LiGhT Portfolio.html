@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiGhT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/10.12.2/framer-motion.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">    
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans Thai', 'sans-serif'],
+                        source: ['Source Code Pro', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#3490dc',
+                        dark: '#202020',
+                        light: '#f5f5f5'
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+        background-color: #191919;
+        background-image: radial-gradient(circle, rgba(109, 109, 109, 0.3) 1px, transparent 1px);
+        background-size: 20px 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 75px;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+        z-index: -1;
+    }
+
+    body::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 75px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+        z-index: -1;
+    }
+        
+        #darkModeToggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        #darkModeToggle:hover {
+            transform: scale(1.2);
+        }
+
+        #themeMenu {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 100px;
+            font-family: 'Source Code Pro', monospace;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s 0.3s;
+        }
+        
+        #themeMenu.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease, visibility 0s 0s;
+        }
+        
+        #themeMenu button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        #themeMenu button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        #imageButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        #imageButton:hover {
+            transform: scale(1.2);
+        }
+
+        #versionText {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            color: rgb(151, 151, 151);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #copyrightText {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            color: rgb(151, 151, 151);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #footerText {
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgb(151, 151, 151);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .light-theme .icon-light {
+            color: #000;
+        }
+
+        .dark-theme .icon-light {
+            color: #fff;
+        }
+
+        .centered-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            overflow: hidden;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+
+        .centered-image img {
+            width: 375px;
+            height: 525px;
+            border-radius: 10px;
+            object-fit: cover;
+            transition: transform 0.25s ease-in-out;
+        }
+
+        .centered-image:hover img {
+            transform: scale(1.1);
+        }
+
+        
+        body, #aboutMe, #aboutMe h2, #aboutMe p {
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        #squareBox {
+            width: 142px;
+            height: 142px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .instagram-btn {
+            background: linear-gradient(45deg, #FBE18A, #FCBB45 21%, #F75274 38%, #D53692 52%, #8F39CE 74%, #5B4FE9, #394dff);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .instagram-btn:hover {
+            background: #ffffff;
+        }
+        .instagram-icon {
+            transition: color 0.3s ease;
+        }
+
+        .instagram-btn:hover .instagram-icon {
+            color: #000000;
+        }
+        
+        .button-icon {
+            background-color: black;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .button-icon:hover {
+            background-color: white;
+        }
+
+        .button-icon .svg-icon path {
+            fill: white;
+            transition: fill 0.3s ease;
+        }
+
+        .button-icon:hover .svg-icon path {
+            fill: black;
+        }
+
+    </style>
+</head>
+<body class="font-sans flex items-center justify-center min-h-screen bg-dark text-white" id="body">
+    <button id="imageButton" class="flex items-center justify-center">
+        <i data-lucide="codesandbox" class="w-10 h-10 text-white transition-transform duration-300 icon-light"></i>
+    </button>
+
+    <button id="darkModeToggle">
+        <i data-lucide="palette" class="w-6 h-6"></i>
+    </button>
+    <div id="themeMenu">
+        <button onclick="setTheme('light')">
+            <i data-lucide="sun" class="w-4 h-4"></i> Light
+        </button>
+        <button onclick="setTheme('dark')">
+            <i data-lucide="moon" class="w-4 h-4"></i> Dark
+        </button>
+        <button onclick="setTheme('system')">
+            <i data-lucide="laptop" class="w-4 h-4"></i> System
+        </button>
+    </div>
+    
+    <div class="flex items-start justify-center w-full">
+        <div class="centered-image mr-5">
+            <img src="https://lh3.googleusercontent.com/d/1R9KvnHAEt_k_oYFgKQ6kmYrTX50ReJs3" alt="Profile Image">
+        </div>
+        <div id="aboutMe" class="bg-[##131313] text-white p-5 rounded-lg shadow-lg max-w-[1100px] w-full mt-[130px]">
+            <div class="flex items-center mb-1 text-left">
+                <img id="themeIcon" src="https://i.postimg.cc/1zCGbFYs/discord-icon-512x394-w67rhk6f.png" class="w-7 h-5.5 mr-1" alt="Icon">
+                <h2 class="text-3xl font-bold text-left font-source mr-6">l18ht</h2>
+                <img id="themeIcon" src="https://lh3.googleusercontent.com/d/17s1rK8vQa6ZHEvopiujV3MQ56BdHfdW2" class="w-7 h-5.5 mr-3" alt="Icon">
+                <a href="https://www.roblox.com/users/1787156344/profile" target="_blank" rel="noopener noreferrer">
+                    <h2 class="text-3xl font-bold text-left font-source">Spxli_z</h2>
+                </a>            
+            </div>
+            
+            <div class="w-full h-[1px] bg-gray-400 mb-2 opacity-50"></div>
+            <p class="text-base text-left text-white font-source">Welcome to my portfolio website! My name is LiGhT. I’m from Thailand and currently living here. I have 1-2 years of experience in visual effect in roblox I have a deep passion for Roguelike games.</p>
+            <div class="flex gap-4 mt-4">
+                <button class="w-40 h-40 bg-[#0866ff] rounded-lg text-white focus:outline-none flex justify-center items-center transition-all duration-300 transform hover:scale-105 hover:bg-white relative group" onmouseover="changeImage()" onmouseout="resetImage()" onclick="window.open('https://www.facebook.com/paranyu.a');">
+                    <img id="buttonImage" src="https://lh3.googleusercontent.com/d/1i1KImKbGroOtehTvcAAnyDxLSGGM44jj" class="w-20 h-20 transition-all duration-300">
+                    <span class="absolute bottom-full mb-3 text-xs text-black bg-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-all mt-2 inline-block">Paranyu Kittitharakul
+                        <span class="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-white rotate-45"></span>
+                    </span>    
+                </button>
+                
+                <button class="w-40 h-40 rounded-lg text-white focus:outline-none flex justify-center items-center transition-transform duration-300 transform hover:scale-105 instagram-btn relative group" title="Instagram" onclick="window.open('https://www.instagram.com/_a.parxnyu/');">
+                    <i data-lucide="instagram" class="w-20 h-20 instagram-icon"></i>
+                    <span class="absolute bottom-full mb-3 text-xs text-black bg-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-all mt-2 inline-block">_a.parxnyu
+                        <span class="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-white rotate-45"></span>
+                    </span>
+                </button>
+                
+                <button class="transition-all duration-500 transform bg-black w-40 h-40 rounded-lg text-white focus:outline-none flex justify-center items-center hover:bg-white hover:text-black hover:scale-105 button-icon relative group" title="SVG Icon" onclick="window.open('https://www.facebook.com/paranyu.a');">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 93 92" fill="none" class="svg-icon">
+                        <path d="M50.7568 42.1716L69.3704 21H64.9596L48.7974 39.383L35.8887 21H21L40.5205 48.7983L21 71H25.4111L42.4788 51.5869L56.1113 71H71L50.7557 42.1716H50.7568ZM44.7152 49.0433L42.7374 46.2752L27.0005 24.2492H33.7756L46.4755 42.0249L48.4533 44.7929L64.9617 67.8986H58.1865L44.7152 49.0443V49.0433Z" fill="white"/>
+                    </svg>
+                    <span class="absolute bottom-full mb-3 text-xs text-black bg-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-all mt-2 inline-block">@SpxliZ
+                        <span class="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-white rotate-45"></span>
+                    </span>
+                </button>
+                
+                <button class="w-40 h-40 bg-[#001E36] rounded-lg text-white focus:outline-none flex justify-center items-center transition-all duration-300 transform hover:scale-105 button-1 relative group" onmouseover="changeButtonStyle(this, 'image-1', 'https://lh3.googleusercontent.com/d/1xqbyb8-yGdj6GiqtHhUN1GPlMDsk62J-')" onmouseout="resetButtonStyle(this, 'image-1', 'https://lh3.googleusercontent.com/d/1YMmBQrT6MILil4DoD_fMskv0DNvhrT95')" onclick="window.open('https://x.com/SpxliZ');">
+                    <img src="https://lh3.googleusercontent.com/d/1YMmBQrT6MILil4DoD_fMskv0DNvhrT95" class="w-20 h-20 transition-all duration-300 image-1">
+                    <span class="absolute bottom-full mb-3 text-xs text-black bg-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-all mt-2 inline-block">2+ years of experience
+                    <span class="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-white rotate-45"></span>
+                    </span>
+                </button>
+                
+                <button class="w-40 h-40 bg-[#5D6AF2] rounded-lg text-white focus:outline-none flex justify-center items-center transition-all duration-300 transform hover:scale-105 button-2 relative group" onmouseover="changeButtonStyle(this, 'image-2', 'https://lh3.googleusercontent.com/d/1F2AdlgWehDQkKmsBiUQykvNm-xrXhmj3')" onmouseout="resetButtonStyle(this, 'image-2', 'https://i.postimg.cc/1zCGbFYs/discord-icon-512x394-w67rhk6f.png')">
+                    <img src="https://lh3.googleusercontent.com/d/1BYkl5tBTFzLkjhVoySH2L0B86OIFsZ49" class="w-16 h-13 transition-all duration-300 image-2">
+                    <span class="absolute bottom-full mb-3 text-xs text-black bg-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-all mt-2 inline-block">Light Portfolio
+                        <span class="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-white rotate-45"></span>
+                    </span>
+                </button>
+                
+                <button class="w-40 h-40 bg-[#0F0F0F] rounded-lg text-white focus:outline-none flex justify-center items-center transition-all duration-300 transform hover:scale-105 button-3 relative group" onmouseover="changeButtonStyle(this, 'image-3', 'https://lh3.googleusercontent.com/d/1u7OqweiBuv-lSUfca_sUfMBsi_tuFRYA')" onmouseout="resetButtonStyle(this, 'image-3', 'https://lh3.googleusercontent.com/d/1uDtn3zoP2045ROTmDCoxjK3Lr6Pm8Mqj')">
+                    <img src="https://lh3.googleusercontent.com/d/1uDtn3zoP2045ROTmDCoxjK3Lr6Pm8Mqj" class="w-20 h-20 transition-all duration-300 image-3">
+                    <span class="absolute bottom-full mb-3 text-xs text-black bg-white rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-all mt-2 inline-block">3+ years of experience
+                        <span class="absolute left-1/2 transform -translate-x-1/2 bottom-[-4px] w-2 h-2 bg-white rotate-45"></span>
+                    </span>
+                </button>
+                                                                     
+            </div>                     
+
+    <div id="versionText">v.1</div>
+    
+    <div id="copyrightText">&copy; 2025</div>
+
+    <div id="footerText">Made by LiGhT</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+        });
+
+        const body = document.getElementById('body');
+        const toggle = document.getElementById('darkModeToggle');
+        const themeMenu = document.getElementById('themeMenu');
+        const imageButton = document.getElementById('imageButton');
+        
+        toggle.addEventListener('click', () => {
+            themeMenu.classList.toggle('show');
+        });
+        
+        function changeButtonStyle(button, imageClass, newImageSrc) {
+        button.style.backgroundColor = '#ffffff';
+        const image = button.querySelector(`.${imageClass}`);
+        image.src = newImageSrc;
+    }
+
+    function resetButtonStyle(button, imageClass, originalImageSrc) {
+        button.style.backgroundColor = '';
+        const image = button.querySelector(`.${imageClass}`);
+        image.src = originalImageSrc;
+    }
+
+        function changeImage() {
+        var image = document.getElementById("buttonImage");
+        var button = image.closest('button');
+
+        image.src = "https://lh3.googleusercontent.com/d/16As2Y0k7Z_1cxvdHKRzr0kz7OdUYZR4m";
+        
+        button.style.backgroundColor = "#ffffff";
+    }
+
+    function resetImage() {
+        var image = document.getElementById("buttonImage");
+        var button = image.closest('button');
+
+        image.src = "https://lh3.googleusercontent.com/d/1i1KImKbGroOtehTvcAAnyDxLSGGM44jj";
+        
+        button.style.backgroundColor = "#0866ff";
+    }
+        function setTheme(mode) { 
+            localStorage.setItem('theme', mode);  
+            const aboutMe = document.getElementById('aboutMe');
+            const aboutMeText = aboutMe.querySelectorAll('h2, p');
+            const iconImg = document.getElementById('themeIcon');
+
+            if (mode === 'light') {
+                body.classList.remove('bg-dark', 'text-white');
+                body.classList.add('bg-light', 'text-black');
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+
+                document.body.style.backgroundColor = '#f5f5f5';
+                document.body.style.color = '#000';
+
+                aboutMe.style.backgroundColor = '#ffffff';
+                aboutMeText.forEach(element => {
+                    element.style.color = '#000';
+                });
+
+                iconImg.src = "https://i.postimg.cc/25kzCgCj/icon.png";
+
+            } else if (mode === 'dark') {
+                body.classList.remove('bg-light', 'text-black');
+                body.classList.add('bg-dark', 'text-white');
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+
+                document.body.style.backgroundColor = '#202020';
+                document.body.style.color = '#fff';
+
+                aboutMe.style.backgroundColor = '#131313';
+                aboutMeText.forEach(element => {
+                    element.style.color = '#fff';
+                });
+
+                iconImg.src = "https://i.postimg.cc/1zCGbFYs/discord-icon-512x394-w67rhk6f.png";
+            } else {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme('dark');
+                } else {
+                    setTheme('light');
+                }
+            }
+
+    themeMenu.classList.remove('show');
+}
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme('system');
+            }
+        });
+
+    </script>
+</body>
+</html>
